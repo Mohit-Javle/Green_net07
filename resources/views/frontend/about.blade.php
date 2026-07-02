@@ -493,4 +493,97 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+@section('extra_css')
+<style>
+/* About Page Mobile Responsiveness Fixes */
+@media (max-width: 767px) {
+    .tp-about-2-area {
+        padding-top: 60px !important;
+        padding-bottom: 60px !important;
+    }
+    
+    .tp-about-2-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin-bottom: 40px !important;
+        position: relative !important;
+    }
+    
+    .tp-about-2-wrapper .img-1 {
+        width: 100% !important;
+        max-width: 320px !important;
+        height: auto !important;
+        left: 0 !important;
+        margin: 0 auto !important;
+        position: relative !important;
+    }
+    
+    .tp-about-2-wrapper .img-2 {
+        display: none !important;
+    }
+    
+    .tp-about-2-wrapper .tp-about-3-counter {
+        width: 100% !important;
+        max-width: 320px !important;
+        margin-top: 20px !important;
+        position: relative !important;
+        padding: 20px !important;
+        left: 0 !important;
+    }
+    
+    .tp-about-2-title-wrapper {
+        padding-left: 0 !important;
+        text-align: center !important;
+    }
+    
+    .tp-about-2-title-wrapper .tp-section-title-pre-2 {
+        display: block !important;
+        text-align: center !important;
+    }
+
+    .tp-about-2-title-wrapper .tp-section-title {
+        font-size: 26px !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+        word-wrap: break-word !important;
+    }
+    
+    .tp-about-2-text {
+        text-align: center !important;
+        font-size: 14px !important;
+    }
+
+    .tp-about-icon {
+        justify-content: center !important;
+        text-align: left !important;
+    }
+
+    .tp-about-list ul {
+        text-align: left !important;
+        display: inline-block !important;
+        padding-left: 0 !important;
+    }
+    
+    #tour-detail-card {
+        padding: 25px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .timeline-steps-list {
+        padding-left: 0 !important;
+    }
+    
+    #cert-lightbox > div {
+        padding: 25px !important;
+    }
+    
+    .tp-faq-thumb {
+        height: 250px !important;
+        margin-bottom: 30px !important;
+    }
+}
+</style>
+@endsection
+
 @endsection

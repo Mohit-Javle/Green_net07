@@ -249,7 +249,7 @@
                     </div>
                     <div class="col-xxl-3 col-xl-3 col-lg-9 col-md-9 col-6">
                         <div class="tp-header-main-right d-flex align-items-center justify-content-end">
-                            <div class="tp-header-contact d-xl-flex align-items-center">
+                            <div class="tp-header-contact d-flex align-items-center">
                                 <div class="tp-header-contact-inner d-none d-xl-flex align-items-center">
                                     <div class="tp-header-contact-icon">
                                         <span><i class="fa-solid fa-phone-volume" style="color: var(--tp-theme-primary); font-size: 20px;"></i></span>

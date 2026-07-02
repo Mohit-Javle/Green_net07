@@ -212,6 +212,13 @@
         .pagination .page-item.active .page-link { background: var(--primary); color: #fff; border-color: var(--primary); }
         .pagination .page-item .page-link:hover { border-color: var(--primary); color: var(--primary); }
 
+        /* Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 18px;
+        }
+
         /* Mobile Responsive overrides */
         @media (max-width: 768px) {
             .sidebar {
@@ -225,12 +232,19 @@
             #sidebar-close {
                 display: block !important;
             }
+            #sidebar-toggle {
+                display: block !important;
+            }
             .admin-main {
                 margin-left: 0 !important;
             }
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
                 gap: 12px !important;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
             }
             .form-grid-2 {
                 grid-template-columns: 1fr !important;
@@ -356,6 +370,17 @@
                 sidebar.classList.remove('open');
             });
         }
+
+        // Close sidebar if clicked outside of it on mobile/tablet views
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && sidebar && toggleBtn) {
+                if (sidebar.classList.contains('open') && 
+                    !sidebar.contains(e.target) && 
+                    !toggleBtn.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
     });
 </script>
 </body>

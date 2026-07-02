@@ -133,9 +133,12 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 <style>
+    .tp-contact-map {
+        filter: none !important;
+    }
     /* Green Branded Map Theme */
     .leaflet-tile {
-        filter: sepia(100%) hue-rotate(80deg) saturate(1.8) contrast(1.1) brightness(0.95);
+        filter: sepia(100%) hue-rotate(80deg) saturate(1.8) contrast(1.1) brightness(0.95) !important;
     }
     .map-overlay-status {
         position: absolute;

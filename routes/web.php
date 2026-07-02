@@ -27,7 +27,11 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 
 Route::get('/init-admin', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate');
+        $output = '';
+        if (request()->has('migrate')) {
+            \Illuminate\Support\Facades\Artisan::call('migrate');
+            $output .= "Migrations run output: " . \Illuminate\Support\Facades\Artisan::output() . "<br>";
+        }
         
         $admin = \App\Models\AdminUser::where('email', 'admin@agronet.com')->first();
         if (!$admin) {
@@ -36,14 +40,14 @@ Route::get('/init-admin', function () {
                 'email'    => 'admin@agronet.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('admin@123'),
             ]);
-            return 'Admin user created successfully with default credentials!';
+            return $output . 'Admin user created successfully with default credentials!';
         }
         
         $admin->password = \Illuminate\Support\Facades\Hash::make('admin@123');
         $admin->save();
-        return 'Admin user already exists. Password has been reset to default: admin@123';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
+        return $output . 'Admin user already exists. Password has been reset to default: admin@123';
+    } catch (\Throwable $e) {
+        return 'Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
     }
 });
 

@@ -33,19 +33,16 @@ Route::get('/init-admin', function () {
             $output .= "Migrations run output: " . \Illuminate\Support\Facades\Artisan::output() . "<br>";
         }
         
-        $admin = \App\Models\AdminUser::where('email', 'admin@agronet.com')->first();
-        if (!$admin) {
-            \App\Models\AdminUser::create([
-                'name'     => 'Admin',
-                'email'    => 'admin@agronet.com',
-                'password' => \Illuminate\Support\Facades\Hash::make('admin@123'),
-            ]);
-            return $output . 'Admin user created successfully with default credentials!';
-        }
+        // Delete existing records to avoid duplicate key issues
+        \App\Models\Product::query()->delete();
+        \App\Models\Category::query()->delete();
+        \App\Models\AdminUser::query()->delete();
         
-        $admin->password = \Illuminate\Support\Facades\Hash::make('admin@123');
-        $admin->save();
-        return $output . 'Admin user already exists. Password has been reset to default: admin@123';
+        // Run database seeder directly
+        $seeder = new \Database\Seeders\DatabaseSeeder();
+        $seeder->run();
+        
+        return $output . 'Database seeded successfully! Admin user created (admin@agronet.com / admin@123), and default products/categories populated.';
     } catch (\Throwable $e) {
         return 'Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
     }

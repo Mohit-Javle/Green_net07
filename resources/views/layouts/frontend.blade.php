@@ -21,6 +21,43 @@
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 
     @yield('extra_css')
+
+    <style>
+        /* Fix PC View Header Overlapping on Laptop Screens (1200px - 1399px) */
+        @media only screen and (min-width: 1200px) and (max-width: 1399px) {
+            .tp-main-menu ul li:not(:last-of-type) {
+                margin-right: 12px !important;
+            }
+            .tp-main-menu ul li a {
+                font-size: 14px !important;
+                padding: 40px 0 !important;
+            }
+            .tp-header-contact-inner {
+                margin-right: 12px !important;
+                padding-right: 12px !important;
+            }
+            .tp-header-contact-icon span {
+                height: 44px !important;
+                width: 44px !important;
+                line-height: 46px !important;
+                font-size: 18px !important;
+                margin-right: 8px !important;
+            }
+            .tp-header-contact-content p {
+                font-size: 12px !important;
+            }
+            .tp-header-contact-content span a {
+                font-size: 13px !important;
+            }
+            .tp-btn {
+                padding: 10px 20px !important;
+                font-size: 14px !important;
+            }
+            .tp-header-btn {
+                padding-left: 10px !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -168,7 +205,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-xxl-7 col-xl-6 d-none d-xl-block">
+                    <div class="col-xxl-7 col-xl-7 d-none d-xl-block">
                         <div class="tp-header-main-menu">
                             <div class="tp-main-menu">
                                 <nav class="tp-main-menu-content">
@@ -192,7 +229,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xxl-3 col-xl-4 col-lg-9 col-md-9 col-6">
+                    <div class="col-xxl-3 col-xl-3 col-lg-9 col-md-9 col-6">
                         <div class="tp-header-main-right d-flex align-items-center justify-content-end">
                             <div class="tp-header-contact d-xl-flex align-items-center">
                                 <div class="tp-header-contact-inner d-none d-xl-flex align-items-center">

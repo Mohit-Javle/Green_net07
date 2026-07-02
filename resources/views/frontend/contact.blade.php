@@ -117,10 +117,196 @@
 
 <!-- contact map start -->
 <div class="tp-contact-map-area">
-    <div class="tp-contact-map">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3749.0229342795493!2d72.8427844!3d20.3820251!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be0ce293cbf539f%3A0x6e8e8ce8a46cf11!2sGIDC%20Industrial%20Estate%2C%20Kachigam%2C%20Daman%2C%20Dadra%20and%20Nagar%20Haveli%20and%20Daman%20and%20Diu%20396215!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="tp-contact-map" style="position: relative; width: 100%; height: 500px;">
+        <div id="map-status" class="map-overlay-status">
+            <i id="map-status-icon" class="fa-solid fa-spinner fa-spin mr-10 text-primary"></i>
+            <span id="map-status-text">Detecting your location...</span>
+        </div>
+        <div id="route-map" style="width: 100%; height: 100%;"></div>
     </div>
 </div>
 <!-- contact map end -->
 
+@endsection
+
+@section('extra_css')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+<style>
+    .map-overlay-status {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(4px);
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-family: var(--tp-ff-heading);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--tp-heading-secondary);
+        display: flex;
+        align-items: center;
+        border-left: 4px solid var(--tp-theme-primary);
+        max-width: calc(100% - 30px);
+        transition: all 0.3s ease;
+    }
+    .map-overlay-status.error {
+        border-left-color: #ff4d4f;
+    }
+    .leaflet-routing-container {
+        background-color: white !important;
+        opacity: 0.95 !important;
+        font-family: var(--tp-ff-p) !important;
+        font-size: 13px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        max-height: 320px !important;
+        overflow-y: auto !important;
+        width: 280px !important;
+    }
+    /* Customize the scrollbar inside the routing panel */
+    .leaflet-routing-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .leaflet-routing-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    .leaflet-routing-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+</style>
+@endsection
+
+@section('extra_js')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const destLat = 20.3820251;
+    const destLng = 72.8427844;
+    const destAddress = "GIDC Industrial Estate, Kachigam, Daman - 396210";
+    
+    const statusEl = document.getElementById('map-status');
+    const statusTextEl = document.getElementById('map-status-text');
+    const statusIconEl = document.getElementById('map-status-icon');
+    
+    // Initialize map centered at destination by default
+    let map = L.map('route-map').setView([destLat, destLng], 14);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Destination Marker
+    const destIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    const destMarker = L.marker([destLat, destLng], { icon: destIcon }).addTo(map)
+        .bindPopup(`<b>AgroNet Solutions Factory</b><br>${destAddress}`)
+        .openPopup();
+
+    function setStatus(text, type = 'info') {
+        statusTextEl.innerHTML = text;
+        if (type === 'error') {
+            statusEl.classList.add('error');
+            statusIconEl.className = 'fa-solid fa-circle-exclamation mr-10 text-danger';
+        } else if (type === 'success') {
+            statusEl.classList.remove('error');
+            statusIconEl.className = 'fa-solid fa-circle-check mr-10 text-success';
+            setTimeout(() => {
+                statusEl.style.opacity = '0';
+                setTimeout(() => statusEl.style.display = 'none', 300);
+            }, 5000);
+        } else {
+            statusEl.classList.remove('error');
+            statusIconEl.className = 'fa-solid fa-spinner fa-spin mr-10 text-primary';
+        }
+    }
+
+    // Try Browser Geolocation
+    if ("geolocation" in navigator) {
+        setStatus("Detecting your location to draw the route...");
+        
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                
+                setStatus("Location found! Calculating driving route...", 'info');
+                
+                // Add User Marker
+                const userIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+                
+                L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
+                    .bindPopup("<b>Your Location</b>");
+                
+                // Set up Routing Control
+                try {
+                    const routingControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLat, userLng),
+                            L.latLng(destLat, destLng)
+                        ],
+                        routeWhileDragging: false,
+                        router: L.Routing.osrmv1({
+                            serviceUrl: 'https://router.project-osrm.org/route/v1'
+                        }),
+                        lineOptions: {
+                            styles: [{ color: '#1F7A4D', opacity: 0.8, weight: 6 }]
+                        },
+                        createMarker: function() { return null; } // Don't create default markers since we created custom ones
+                    }).addTo(map);
+                    
+                    routingControl.on('routesfound', function() {
+                        setStatus("Route loaded successfully!", 'success');
+                    });
+                    
+                    routingControl.on('routingerror', function(e) {
+                        console.error(e);
+                        setStatus("Could not calculate route. Showing direct destination.", 'error');
+                    });
+                } catch (err) {
+                    console.error(err);
+                    setStatus("Routing service error. Showing destination address.", 'error');
+                }
+            },
+            function (error) {
+                let errorMsg = "Location access denied. Displaying factory address.";
+                if (error.code === error.POSITION_UNAVAILABLE) {
+                    errorMsg = "Location unavailable. Displaying factory address.";
+                } else if (error.code === error.TIMEOUT) {
+                    errorMsg = "Location request timed out. Displaying factory address.";
+                }
+                
+                setStatus(errorMsg + ` <a href="https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}" target="_blank" class="ml-10 text-decoration-underline" style="color: var(--tp-theme-primary); font-weight: 700;">Open Google Maps</a>`, 'error');
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 8000,
+                maximumAge: 0
+            }
+        );
+    } else {
+        setStatus(`Geolocation not supported. <a href="https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}" target="_blank" class="ml-10 text-decoration-underline" style="color: var(--tp-theme-primary); font-weight: 700;">Open Google Maps</a>`, 'error');
+    }
+});
+</script>
 @endsection

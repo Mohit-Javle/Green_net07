@@ -24,6 +24,29 @@ Route::get('/category/{slug}', [ProductController::class, 'category'])->name('ca
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
+
+Route::get('/init-admin', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate');
+        
+        $admin = \App\Models\AdminUser::where('email', 'admin@agronet.com')->first();
+        if (!$admin) {
+            \App\Models\AdminUser::create([
+                'name'     => 'Admin',
+                'email'    => 'admin@agronet.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('admin@123'),
+            ]);
+            return 'Admin user created successfully with default credentials!';
+        }
+        
+        $admin->password = \Illuminate\Support\Facades\Hash::make('admin@123');
+        $admin->save();
+        return 'Admin user already exists. Password has been reset to default: admin@123';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
 /*
 |--------------------------------------------------------------------------
 | Admin Routes

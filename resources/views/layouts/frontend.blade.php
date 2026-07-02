@@ -23,12 +23,30 @@
     @yield('extra_css')
 
     <style>
+        /* Dropdown Submenu General Styling for Desktop (min-width: 1200px) */
+        @media only screen and (min-width: 1200px) {
+            .tp-main-menu ul li .submenu {
+                width: 270px !important;
+                padding: 15px 0 !important;
+            }
+            .tp-main-menu ul li .submenu li {
+                padding: 0 20px !important;
+                margin-bottom: 0 !important;
+            }
+            .tp-main-menu ul li .submenu li a {
+                padding: 8px 0 !important;
+                font-size: 14px !important;
+                line-height: 1.4 !important;
+                display: block !important;
+            }
+        }
+
         /* Fix PC View Header Overlapping on Laptop Screens (1200px - 1399px) */
         @media only screen and (min-width: 1200px) and (max-width: 1399px) {
             .tp-main-menu ul li:not(:last-of-type) {
                 margin-right: 12px !important;
             }
-            .tp-main-menu ul li a {
+            .tp-main-menu-content > ul > li > a {
                 font-size: 14px !important;
                 padding: 40px 0 !important;
             }

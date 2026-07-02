@@ -137,39 +137,7 @@
 
                 <div class="tp-main-menu-mobile fix d-xl-none mb-40"></div>
                 
-                <div class="offcanvas__contact">
-                    <h4 class="offcanvas__title">Contacts</h4>
-                    <div class="offcanvas__contact-content d-flex">
-                        <div class="offcanvas__contact-content-icon">
-                            <i class="fa-sharp fa-solid fa-location-dot"></i>
-                        </div>
-                        <div class="offcanvas__contact-content-content">
-                            <a href="https://maps.google.com" target="_blank">GIDC Industrial Estate, Kachigam, Daman - 396210</a>
-                        </div>
-                    </div>
-                    <div class="offcanvas__contact-content d-flex">
-                        <div class="offcanvas__contact-content-icon">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div class="offcanvas__contact-content-content">
-                            <a href="mailto:info@agronetsolutions.in">info@agronetsolutions.in</a>
-                        </div>
-                    </div>
-                    <div class="offcanvas__contact-content d-flex">
-                        <div class="offcanvas__contact-content-icon">
-                            <i class="fa-solid fa-phone"></i>
-                        </div>
-                        <div class="offcanvas__contact-content-content">
-                            <a href="tel:+917923456789">+91 79 2345 6789</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="offcanvas__social">
-                    <a class="icon facebook" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="icon twitter" href="#"><i class="fab fa-twitter"></i></a>
-                    <a class="icon youtube" href="#"><i class="fab fa-youtube"></i></a>
-                    <a class="icon linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+
             </div>
         </div>
     </div>
@@ -622,6 +590,20 @@
         // Initialize
         updateBasketCount();
         renderBasket();
+
+        // Close offcanvas when mobile menu links are clicked (helps with page scrolls/anchors)
+        document.addEventListener('click', function(e) {
+            const mobileLink = e.target.closest('.tp-main-menu-mobile a');
+            if (mobileLink) {
+                const href = mobileLink.getAttribute('href');
+                if (href && href !== '#') {
+                    const offcanvas = document.querySelector('.offcanvas__area');
+                    const overlay = document.querySelector('.body-overlay');
+                    if (offcanvas) offcanvas.classList.remove('offcanvas-opened');
+                    if (overlay) overlay.classList.remove('opened');
+                }
+            }
+        });
 
         // Attach listeners to page buttons dynamically
         document.body.addEventListener('click', function(e) {

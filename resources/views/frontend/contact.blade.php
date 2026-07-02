@@ -133,6 +133,10 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 <style>
+    /* Green Branded Map Theme */
+    .leaflet-tile {
+        filter: sepia(100%) hue-rotate(80deg) saturate(1.8) contrast(1.1) brightness(0.95);
+    }
     .map-overlay-status {
         position: absolute;
         top: 15px;
@@ -156,28 +160,9 @@
     .map-overlay-status.error {
         border-left-color: #ff4d4f;
     }
+    /* Completely hide turn-by-turn text instructions */
     .leaflet-routing-container {
-        background-color: white !important;
-        opacity: 0.95 !important;
-        font-family: var(--tp-ff-p) !important;
-        font-size: 13px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-        max-height: 320px !important;
-        overflow-y: auto !important;
-        width: 280px !important;
-    }
-    /* Customize the scrollbar inside the routing panel */
-    .leaflet-routing-container::-webkit-scrollbar {
-        width: 6px;
-    }
-    .leaflet-routing-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-    .leaflet-routing-container::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 4px;
+        display: none !important;
     }
 </style>
 @endsection
@@ -258,13 +243,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 L.marker([userLat, userLng], { icon: userIcon }).addTo(map)
                     .bindPopup("<b>Your Location</b>");
                 
-                // Set up Routing Control
                 try {
                     const routingControl = L.Routing.control({
                         waypoints: [
                             L.latLng(userLat, userLng),
                             L.latLng(destLat, destLng)
                         ],
+                        show: false,
+                        addWaypoints: false,
+                        draggableWaypoints: false,
                         routeWhileDragging: false,
                         router: L.Routing.osrmv1({
                             serviceUrl: 'https://router.project-osrm.org/route/v1'

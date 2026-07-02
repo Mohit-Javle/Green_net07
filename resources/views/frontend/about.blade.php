@@ -37,11 +37,6 @@
                     <img class="img-1" src="{{ asset('assets/img/about/home-2/about-thumb-2-1.jpg') }}" alt="" style="width: 290px; height: 350px; object-fit: cover; border-radius: 8px; position: relative; z-index: 1; left: -20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
                     <img class="img-2" src="{{ asset('assets/img/about/home-2/about-thumb-2-2.jpg') }}" alt="" style="width: 230px; height: 290px; z-index: 2; object-fit: cover; border-radius: 8px; position: absolute; top: 100px; right: -30px; border: 6px solid #ffffff; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
 
-
-                    <div class="tp-about-3-counter" style="background-color: var(--tp-theme-primary); color: #ffffff; padding: 25px; border-radius: 8px; text-align: center;">
-                        <h4 style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 0;">10+</h4>
-                        <p style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 0; font-weight: 700; text-transform: uppercase;">Years of Excellence</p>
-                    </div>
                 </div>
             </div>
             <div class="col-lg-7">
